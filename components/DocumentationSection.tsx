@@ -29,11 +29,29 @@ export default function DocumentationSection() {
   useEffect(() => {
     const fetchDocumentations = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/galleries`);
+        // FIX 1: Pastikan endpoint nembak ke /api/
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/galleries`);
         const result = await response.json();
 
         if (result.success && result.data) {
-          setDocumentations(result.data);
+          // FIX 2: Mapping data untuk memastikan URL gambar valid dan absolute
+          const formattedData = result.data.map((item: any) => {
+            const rawImgUrl = item.image_url || item.image || "";
+            const finalImageUrl = rawImgUrl
+              ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${process.env.NEXT_PUBLIC_API_URL}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+              : "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=800"; // Fallback aman
+
+            return {
+              id: item.id,
+              title: item.title || "Dokumentasi Perjalanan",
+              category: item.category || "Umum",
+              date: item.date || new Date().toISOString().split('T')[0],
+              description: item.description || "",
+              image_url: finalImageUrl,
+            };
+          });
+
+          setDocumentations(formattedData);
         }
       } catch (error) {
         console.error("Gagal mengambil data dokumentasi:", error);
@@ -55,11 +73,15 @@ export default function DocumentationSection() {
 
   // Helper untuk format tanggal dari "2026-08-12" menjadi "Agustus 2026"
   const formatBulanTahun = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+    } catch (e) {
+      return dateString; // Fallback kalau format tanggal berantakan
+    }
   };
 
-  // Jika data kosong dan tidak loading, section tidak perlu dirender (sesuai request: jangan ada-adain data)
+  // Jika data kosong dan tidak loading, section tidak perlu dirender
   if (!isLoading && documentations.length === 0) return null;
 
   return (
@@ -71,7 +93,7 @@ export default function DocumentationSection() {
           "linear-gradient(to bottom, #F6EFDF 0%, #1B120B 8%, #2E0E1B 25%, #5C0A2E 50%, #2E0E1B 75%, #1B120B 92%, #F6EFDF 100%)",
       }}
     >
-      {/* Tekstur bintang geometris, konsisten dengan section lain */}
+      {/* Tekstur bintang geometris */}
       <svg
         className="absolute inset-0 w-full h-full opacity-[0.05] pointer-events-none"
         aria-hidden="true"
@@ -94,7 +116,7 @@ export default function DocumentationSection() {
         <rect width="100%" height="100%" fill="url(#docStarMotif)" />
       </svg>
 
-      {/* Glow lembut, senada hero */}
+      {/* Glow lembut */}
       <div className="absolute top-1/3 left-0 w-[450px] h-[450px] bg-[#C6952F] rounded-full blur-[130px] opacity-[0.12] -translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-1/4 right-0 w-[450px] h-[450px] bg-[#C6952F] rounded-full blur-[130px] opacity-[0.08] translate-x-1/3 pointer-events-none" />
 
@@ -149,7 +171,6 @@ export default function DocumentationSection() {
                   key={doc.id}
                   className="group relative overflow-hidden rounded-3xl aspect-[4/3] bg-[#2E0E1B] shadow-sm hover:shadow-2xl hover:shadow-[#C6952F]/10 ring-1 ring-[#C6952F]/20 transition-all duration-500 cursor-pointer animate-fade-in-up"
                 >
-                  {/* Gambar Dokumentasi */}
                   <Image
                     src={doc.image_url}
                     alt={doc.title}
@@ -157,10 +178,8 @@ export default function DocumentationSection() {
                     className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                   />
 
-                  {/* Overlay Gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1B120B]/90 via-[#1B120B]/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
 
-                  {/* Badge Kategori / Lokasi (Kiri Atas) */}
                   <div className="absolute top-4 left-4 bg-[#F6EFDF]/95 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
                     <svg
                       className="w-3.5 h-3.5 text-[#5C0A2E]"
@@ -174,7 +193,6 @@ export default function DocumentationSection() {
                     </span>
                   </div>
 
-                  {/* Teks Informasi (Kiri Bawah) */}
                   <div className="absolute bottom-0 left-0 w-full p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-[#C6952F] text-xs font-bold mb-1">
                       {formatBulanTahun(doc.date)}
@@ -186,7 +204,6 @@ export default function DocumentationSection() {
                 </div>
               ))}
 
-              {/* State Jika Filter Kosong */}
               {filteredDocs.length === 0 && (
                 <div className="col-span-full py-12 flex flex-col items-center justify-center text-[#E4D6B8]/50">
                   <svg
