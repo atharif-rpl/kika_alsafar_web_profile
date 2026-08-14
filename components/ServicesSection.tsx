@@ -16,17 +16,19 @@ function buildWaLink(message: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-// Type definisi menyesuaikan database Laravel lu
+// Type definisi disesuaikan untuk mengantisipasi snake_case dari API Laravel
 type ServiceType = {
   id: number;
   title: string;
   description: string;
-  startingPrice: string;
-  isPopular: boolean;
+  startingPrice?: string;
+  starting_price?: string; // Antisipasi API Laravel
+  isPopular?: boolean;
+  is_popular?: boolean; // Antisipasi API Laravel
   theme: "dark" | "light" | "outline";
-  features: string[];
+  features: string[] | string; // Antisipasi jika API mengirim format string JSON
   image_url?: string;
-  icon_key?: "umroh" | "umroh_plus" | "haji" | "lainnya"; // opsional, diisi dari dashboard
+  icon_key?: "umroh" | "umroh_plus" | "haji" | "lainnya";
 };
 
 // ==================== ICON LIBRARY ====================
@@ -92,7 +94,8 @@ export default function ServicesSection() {
   const fetchServices = useCallback(async () => {
     setStatus("loading");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services`);
+      // FIX 1: Tambahkan /api/ pada endpoint
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`);
       if (!response.ok) throw new Error("Bad response");
       const result = await response.json();
 
@@ -117,7 +120,6 @@ export default function ServicesSection() {
 
   return (
     <section id="layanan" className="w-full py-24 md:py-32 bg-[#F6EFDF] relative overflow-hidden">
-      {/* Tekstur bintang geometris, konsisten dengan section lain */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.035] pointer-events-none" aria-hidden="true">
         <defs>
           <pattern id="layananStarMotif" width="56" height="56" patternUnits="userSpaceOnUse">
@@ -132,11 +134,9 @@ export default function ServicesSection() {
         <rect width="100%" height="100%" fill="url(#layananStarMotif)" />
       </svg>
 
-      {/* Glow lembut, senada section lain */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#5C0A2E] rounded-full blur-[150px] opacity-[0.06] pointer-events-none -translate-y-1/3 translate-x-1/3" />
 
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 md:px-16 relative z-10">
-        {/* Header Section */}
         <div className="text-center mb-16 md:mb-24 flex flex-col items-center">
           <div className="flex items-center gap-3 mb-4">
             <span className="w-12 h-[1px] bg-[#C6952F]" />
@@ -156,10 +156,8 @@ export default function ServicesSection() {
           </p>
         </div>
 
-        {/* Loading */}
         {status === "loading" && <ServicesSkeleton />}
 
-        {/* Error */}
         {status === "error" && (
           <div className="flex flex-col items-center justify-center text-center py-16 bg-white rounded-[2rem] border border-dashed border-[#C6952F]/30">
             <svg className="w-10 h-10 mb-4 text-[#5C0A2E]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,16 +174,34 @@ export default function ServicesSection() {
           </div>
         )}
 
-        {/* Bento Grid Dinamis */}
         {status === "ready" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
             {services.map((service, index) => {
+              // FIX 2: Baca data dengan aman dari respons API
+              const isPopular = service.isPopular || service.is_popular;
+              const startingPrice = service.startingPrice || service.starting_price || "-";
+              
               const isDark = service.theme === "dark";
               const isOutline = service.theme === "outline";
               const colSpan = index % 2 === 0 ? "lg:col-span-7" : "lg:col-span-5";
-              const imageUrl =
-                service.image_url ||
-                "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=1000";
+              
+              // FIX 3: Parsing string URL gambar
+              const rawImgUrl = service.image_url || "";
+              const finalImageUrl = rawImgUrl
+                ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${process.env.NEXT_PUBLIC_API_URL}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+                : "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=1000";
+
+              // FIX 4: Safety parse untuk fitur jika API mengembalikan string JSON
+              let featuresArray: string[] = [];
+              if (Array.isArray(service.features)) {
+                featuresArray = service.features;
+              } else if (typeof service.features === 'string') {
+                try {
+                  featuresArray = JSON.parse(service.features);
+                } catch (e) {
+                  featuresArray = []; // Fallback jika gagal parse JSON
+                }
+              }
 
               return (
                 <div
@@ -198,7 +214,7 @@ export default function ServicesSection() {
                     ${isOutline ? "bg-white shadow-md border-2 border-[#C6952F]/25" : ""}
                   `}
                 >
-                  {service.isPopular && (
+                  {isPopular && (
                     <span className="absolute top-6 right-6 md:top-8 md:right-8 z-20 bg-[#C6952F] text-[#1B120B] text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-md">
                       Paling Diminati
                     </span>
@@ -206,7 +222,7 @@ export default function ServicesSection() {
 
                   <div className="absolute inset-0 w-full h-full opacity-[0.08] group-hover:opacity-[0.16] transition-opacity duration-700 pointer-events-none">
                     <Image
-                      src={imageUrl}
+                      src={finalImageUrl}
                       alt={service.title}
                       fill
                       className="object-cover object-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-in-out"
@@ -232,13 +248,13 @@ export default function ServicesSection() {
                         Mulai dari
                       </span>
                       <span className={`${marcellus.className} text-xl md:text-2xl ${isDark ? "text-[#C6952F]" : "text-[#5C0A2E]"}`}>
-                        {service.startingPrice}
+                        {startingPrice}
                       </span>
                     </div>
 
-                    {service.features && service.features.length > 0 && (
+                    {featuresArray.length > 0 && (
                       <ul className="flex flex-col gap-3 mb-8">
-                        {service.features.map((feature, idx) => (
+                        {featuresArray.map((feature, idx) => (
                           <li key={idx}>
                             <Link
                               href={buildWaLink(`Assalamu'alaikum, saya tertarik dengan "${feature}". Boleh minta info lebih lanjut?`)}

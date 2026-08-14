@@ -25,19 +25,28 @@ export default function PartnershipSection() {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/partners`);
+        // FIX 1: Pastikan endpoint nembak ke /api/
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/partners`);
         const result = await response.json();
 
         if (result.success && result.data) {
-          // Hanya ambil mitra yang statusnya "active"
-          const activePartners = result.data.filter((p: any) => p.status === 'active');
+          // Hanya ambil mitra yang statusnya "active" (Antisipasi juga kalau API pakai boolean is_active)
+          const activePartners = result.data.filter((p: any) => p.status === 'active' || p.is_active === true);
           
           // Format data biar sesuai dengan properti yang dipanggil di UI (src)
-          const formattedPartners = activePartners.map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            src: p.image_url, 
-          }));
+          const formattedPartners = activePartners.map((p: any) => {
+            // FIX 2: Logika URL Gambar Absolute
+            const rawImgUrl = p.image_url || p.image || "";
+            const finalImageUrl = rawImgUrl
+              ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${process.env.NEXT_PUBLIC_API_URL}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+              : "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=200"; // Fallback aman
+              
+            return {
+              id: p.id,
+              name: p.name || "Mitra Kika Alsafar",
+              src: finalImageUrl, 
+            };
+          });
 
           setPartners(formattedPartners);
         }
