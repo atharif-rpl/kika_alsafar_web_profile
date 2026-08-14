@@ -38,20 +38,27 @@ export default function PackageListSection() {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/packages`);
+        // FIX 1: Pastikan endpoint nembak ke /api/
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/packages`);
         const result = await response.json();
 
         if (result.success && result.data) {
           // Mapping data dari DB agar sesuai format yang dibutuhkan UI & Filter
           const formattedData = result.data.map((item: any) => {
-            // Ambil angka murni dari string harga (misal "Rp 27.900.000" jadi 27900000)
-            const rawPrice = item.startingPrice || item.price || "0";
+            // FIX 2: Antisipasi field snake_case dari Laravel
+            const rawPrice = item.startingPrice || item.starting_price || item.price || "0";
             const priceValue = parseInt(rawPrice.toString().replace(/\D/g, ""), 10) || 0;
+
+            // FIX 3: Logika URL Gambar Absolute
+            const rawImgUrl = item.image_url || item.image || "";
+            const finalImageUrl = rawImgUrl
+              ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${process.env.NEXT_PUBLIC_API_URL}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
+              : "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=800"; // Fallback aman
 
             return {
               id: item.id,
-              title: item.title || item.name,
-              image: item.image_url || "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=800",
+              title: item.title || item.name || "Paket Kika Alsafar",
+              image: finalImageUrl,
               price: rawPrice,
               priceValue: priceValue,
               airline: item.airline || "Umum", // Fallback kalau field belum ada di DB
