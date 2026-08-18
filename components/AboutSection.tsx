@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Marcellus } from "next/font/google";
 
 const marcellus = Marcellus({
@@ -59,7 +60,7 @@ export default function AboutSection() {
             <div className="relative w-[75%] sm:w-[65%] md:w-[60%] aspect-[3/4] rounded-t-full rounded-b-2xl overflow-hidden shadow-xl border-[3px] border-[#C6952F]/40">
               <Image
                 src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=1000"
-                alt="Jemaah Kika Alsafar"
+                alt="Jemaah Kika Al-Safar"
                 fill
                 className="object-cover"
               />
@@ -74,20 +75,8 @@ export default function AboutSection() {
                 className="object-cover"
               />
             </div>
-
-            {/* Badge Pengalaman — nempel di sisi lurus arch, di bawah lengkungan */}
-            <div className="absolute top-28 sm:top-32 -left-2 sm:-left-6 lg:-left-10 z-20 bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] text-[#F6EFDF] p-5 rounded-2xl shadow-xl flex flex-col items-center justify-center border border-[#C6952F]/30">
-              <span
-                className={`${marcellus.className} text-3xl md:text-4xl text-[#C6952F]`}
-              >
-                10+
-              </span>
-              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-widest text-center mt-1 text-[#E4D6B8]/80">
-                Tahun
-                <br />
-                Melayani
-              </span>
-            </div>
+            
+            {/* Badge Takedown sesuai revisi */}
           </div>
 
           {/* KOLOM KANAN: Text & Informasi */}
@@ -96,7 +85,7 @@ export default function AboutSection() {
             <div className="flex items-center gap-3 mb-6">
               <span className="w-2 h-2 rotate-45 bg-[#C6952F]" />
               <span className="text-[#5C0A2E] font-semibold uppercase tracking-[0.25em] text-xs md:text-sm">
-                Tentang Kika Alsafar
+                Tentang Kika Al-Safar
               </span>
             </div>
 
@@ -104,9 +93,9 @@ export default function AboutSection() {
             <h2
               className={`${marcellus.className} text-3xl md:text-4xl lg:text-5xl text-[#1B120B] mb-6 leading-[1.25]`}
             >
-              Melayani Perjalanan Ibadah Anda dengan{" "}
+              Mengukir Perjalanan Ibadah yang{" "}
               <span className="text-[#5C0A2E] relative inline-block">
-                Sepenuh Hati
+                Nyaman, Khusyuk, dan Berkesan
                 <svg
                   className="absolute -bottom-2 left-0 w-full h-3"
                   viewBox="0 0 100 12"
@@ -126,41 +115,23 @@ export default function AboutSection() {
             </h2>
 
             {/* Deskripsi */}
-            <p className="text-[#4a3f33] text-base md:text-lg leading-relaxed mb-8">
-              Sebagai biro perjalanan resmi,{" "}
-              <strong className="text-[#1B120B]">Kika Alsafar</strong>{" "}
-              berdedikasi untuk memberikan pengalaman ibadah yang tenang,
-              nyaman, dan sesuai sunnah. Kami memastikan setiap detail
-              perjalanan Anda, dari keberangkatan hingga kepulangan,
-              tertangani dengan profesionalitas tinggi.
+            <p className="text-[#4a3f33] text-base md:text-lg leading-relaxed mb-10">
+              Setiap perjalanan memiliki cerita, dan setiap ibadah memiliki makna. Kika Al-Safar hadir untuk menemani Anda dengan pelayanan terbaik, perhatian yang tulus, dan pengalaman yang berkesan.
             </p>
 
-            {/* Statistik Inline */}
-            <div className="flex flex-wrap items-center gap-8 sm:gap-12 pt-8 border-t border-dashed border-[#C6952F]/40">
-              <div className="flex flex-col">
-                <p
-                  className={`${marcellus.className} text-3xl md:text-4xl text-[#1B120B] mb-1`}
-                >
-                  5K+
-                </p>
-                <p className="text-sm font-medium text-[#8a7a5f]">
-                  Jemaah Berangkat
-                </p>
-              </div>
-
-              <div className="hidden sm:block w-px h-12 bg-[#C6952F]/30" />
-
-              <div className="flex flex-col">
-                <p
-                  className={`${marcellus.className} text-3xl md:text-4xl text-[#1B120B] mb-1`}
-                >
-                  100%
-                </p>
-                <p className="text-sm font-medium text-[#8a7a5f]">
-                  Izin Kemenag RI
-                </p>
-              </div>
+            {/* Tombol CTA sebagai pengganti Statistik agar tidak kosong */}
+            <div className="pt-8 border-t border-dashed border-[#C6952F]/40 flex justify-start">
+              <Link 
+                href="#packages" 
+                className="inline-flex items-center gap-3 px-8 py-4 bg-[#1B120B] hover:bg-[#5C0A2E] text-white text-sm md:text-base font-medium rounded-full transition-all duration-300 shadow-lg shadow-[#1B120B]/10 hover:shadow-[#5C0A2E]/20"
+              >
+                Lihat Paket Keberangkatan
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
             </div>
+
           </div>
         </div>
       </div>

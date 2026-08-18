@@ -23,11 +23,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Sesuaikan link dengan ID section yang udah kita buat
   const navLinks = [
     { name: "Tentang Kami", href: "#about" },
     { name: "Paket Umrah", href: "#packages" },
+    { name: "Dokumentasi", href: "#dokumentasi" },
     { name: "Testimoni", href: "#testimonials" },
-    { name: "Artikel", href: "#blog" },
+    { name: "FAQ", href: "#faq" },
   ];
 
   return (
@@ -43,19 +45,20 @@ export default function Navbar() {
       <Link href="/" className="flex items-center gap-3 group relative z-50">
         <div className="relative w-11 h-11 md:w-12 md:h-12 flex-shrink-0 rounded-full overflow-hidden group-hover:scale-105 transition-transform shadow-sm bg-white ring-1 ring-[#C6952F]/40">
           <Image
-            src="/images/logoumrah.png"
-            alt="Logo Kika Alsafar"
+            src="/images/logokika.png"
+            alt="Logo Kika Al-safar"
             fill
             className="object-cover"
           />
         </div>
 
+        {/* Teks Logo Kika Al-safar */}
         <span
           className={`${marcellus.className} text-lg md:text-xl tracking-tight transition-colors duration-300 ${
             isScrolled ? "text-[#1B120B]" : "text-[#F6EFDF]"
           }`}
         >
-          Kika<span className="text-[#C6952F]">Alsafar</span>
+          Kika <span className="text-[#C6952F]">Al-Safar</span>
         </span>
       </Link>
 

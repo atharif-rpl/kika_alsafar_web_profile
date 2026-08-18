@@ -44,12 +44,21 @@ const fallbackSlides: SlideType[] = [
   }
 ];
 
+// Helper — sama persis logikanya kayak sebelumnya, cuma dipakai ulang
+// buat background foto besar & thumbnail nav.
+function resolveImageUrl(slide: SlideType) {
+  const imgSource = slide.image || slide.image_url || "";
+  return imgSource?.startsWith("http")
+    ? imgSource
+    : `${process.env.NEXT_PUBLIC_API_URL}${imgSource?.startsWith("/") ? "" : "/"}${imgSource}`;
+}
+
 export default function HeroSection() {
   const [slides, setSlides] = useState<SlideType[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 1. Fetch Data dari Database Laravel
+  // 1. Fetch Data dari Database Laravel — TIDAK DIUBAH
   useEffect(() => {
     const fetchSliders = async () => {
       try {
@@ -75,7 +84,7 @@ export default function HeroSection() {
     fetchSliders();
   }, []);
 
-  // 2. Logika Auto Slide
+  // 2. Logika Auto Slide — TIDAK DIUBAH
   useEffect(() => {
     if (slides.length <= 1) return;
     
@@ -86,7 +95,7 @@ export default function HeroSection() {
     return () => clearInterval(timer);
   }, [slides.length, currentSlide]);
 
-  // Tampilan Loading Skeleton
+  // Tampilan Loading Skeleton — TIDAK DIUBAH
   if (isLoading) {
     return (
       <div className="relative w-full h-screen min-h-[700px] flex items-center justify-center bg-gradient-to-br from-[#1B120B] via-[#2E0E1E] to-[#5C0A2E]">
@@ -100,7 +109,7 @@ export default function HeroSection() {
 
   const activeData = slides[currentSlide];
   
-  // Helper untuk membaca data dengan aman (camelCase atau snake_case)
+  // Helper untuk membaca data dengan aman (camelCase atau snake_case) — TIDAK DIUBAH
   const highlightText = activeData?.highlightWord || activeData?.highlight_word || "Baitullah";
   const btnText = activeData?.buttonText || activeData?.button_text || "Pesan Sekarang";
   const btnLink = activeData?.buttonLink || activeData?.button_link || "#";
@@ -109,7 +118,35 @@ export default function HeroSection() {
     <div className="relative w-full">
       {/* --- HERO FULL SCREEN --- */}
       <section className="relative w-full h-screen min-h-[700px] overflow-hidden flex flex-col bg-gradient-to-br from-[#1B120B] via-[#2E0E1E] to-[#5C0A2E]">
-        <svg className="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none" aria-hidden="true">
+        
+        {/* ==================== BACKGROUND FOTO — crossfade sinkron sama teks ==================== */}
+        <div className="absolute inset-0 z-0">
+          {slides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-[1400ms] ease-in-out ${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={resolveImageUrl(slide)}
+                alt={slide.title || "Kika Alsafar"}
+                fill
+                sizes="100vw"
+                priority={index === 0}
+                className="object-cover object-center scale-105 animate-[kenburns_20s_ease-out_infinite]"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Overlay tint — tetap di dalam palet ink-maroon, bukan hitam generik */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[#1B120B] via-[#1B120B]/55 to-[#1B120B]/15" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#1B120B]/85 via-[#1B120B]/35 to-transparent" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#5C0A2E]/20 via-transparent to-transparent" />
+
+        {/* Tekstur bintang geometris, di atas foto */}
+        <svg className="absolute inset-0 w-full h-full z-[2] opacity-[0.06] pointer-events-none" aria-hidden="true">
           <defs>
             <pattern id="starMotif" width="56" height="56" patternUnits="userSpaceOnUse">
               <path d="M28 4 L33 20 L50 20 L36 30 L41 46 L28 36 L15 46 L20 30 L6 20 L23 20 Z" fill="none" stroke="#C6952F" strokeWidth="1" />
@@ -118,12 +155,11 @@ export default function HeroSection() {
           <rect width="100%" height="100%" fill="url(#starMotif)" />
         </svg>
 
-        <div className="hidden lg:block absolute right-[6%] top-[42%] -translate-y-1/2 w-[440px] h-[440px] bg-[#C6952F]/20 blur-[110px] rounded-full pointer-events-none" />
+        <div className="hidden lg:block absolute right-[10%] top-[38%] -translate-y-1/2 w-[420px] h-[420px] bg-[#C6952F]/15 blur-[110px] rounded-full pointer-events-none z-[2]" />
 
-        <div className="relative z-20 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-10 px-6 sm:px-10 md:px-16 lg:px-20 xl:px-28 pt-32 sm:pt-36 lg:pt-36 pb-10">
-          
-          {/* KIRI: Teks & CTA */}
-          <div className="lg:col-span-7 flex flex-col justify-center h-full">
+        {/* ==================== KONTEN ==================== */}
+        <div className="relative z-20 flex-1 w-full flex items-center px-6 sm:px-10 md:px-16 lg:px-20 xl:px-28 pt-32 sm:pt-36 lg:pt-36 pb-10">
+          <div className="w-full max-w-xl lg:max-w-2xl">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-2 h-2 rotate-45 bg-[#C6952F]" />
               <span className="text-xs md:text-sm font-medium text-[#E4D6B8] tracking-[0.25em] uppercase">
@@ -149,7 +185,7 @@ export default function HeroSection() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8 mt-auto lg:mt-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
               <Link
                 href={btnLink}
                 className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#C6952F] hover:bg-[#D9AB4A] text-[#1B120B] px-8 py-4 rounded-full font-semibold transition-all shadow-[0_8px_30px_rgba(198,149,47,0.35)]"
@@ -179,53 +215,44 @@ export default function HeroSection() {
               )}
             </div>
 
-            <div className="hidden sm:flex items-center gap-6 mt-10 pt-8 border-t border-dashed border-[#C6952F]/20">
+            <div className="hidden sm:flex items-center gap-6 mt-10 pt-8 border-t border-dashed border-[#C6952F]/25">
               {["PPIU Resmi Kemenag RI", "Muthawif Tersertifikasi", "Hotel Bintang 4 & 5"].map((chip, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <svg className="w-3.5 h-3.5 text-[#C6952F] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-                  <span className="text-xs text-[#E4D6B8]/60 font-medium whitespace-nowrap">{chip}</span>
+                  <span className="text-xs text-[#E4D6B8]/70 font-medium whitespace-nowrap">{chip}</span>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* KANAN: Arch photo frame */}
-          <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center gap-5 h-full">
-            <span className="w-px h-16 bg-gradient-to-b from-transparent to-[#C6952F]/40" />
-
-            <div className="relative w-full max-w-[430px] aspect-[4/5] rounded-t-full rounded-b-[2rem] overflow-hidden border-[3px] border-[#C6952F]/50 shadow-[0_25px_70px_rgba(0,0,0,0.55)]">
-              {slides.map((slide, index) => {
-                // FIX 3: Logika URL Gambar (Full URL vs Path Lokal)
-                const imgSource = slide.image || slide.image_url || "";
-                const finalImageUrl = imgSource?.startsWith('http') 
-                  ? imgSource 
-                  : `${process.env.NEXT_PUBLIC_API_URL}${imgSource?.startsWith('/') ? '' : '/'}${imgSource}`;
-
-                return (
-                  <div key={slide.id} className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? "opacity-100" : "opacity-0"}`}>
-                    <Image 
-                      src={finalImageUrl} 
-                      alt={slide.title || "Slider"} 
-                      fill 
-                      sizes="(max-width: 1024px) 100vw, 430px"
-                      className="object-cover object-center scale-105 animate-[kenburns_20s_ease-out_infinite]" 
-                      priority={index === 0} 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1B120B]/60 via-transparent to-transparent" />
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className={`${marcellus.className} text-[#E4D6B8]/70 text-sm tracking-[0.3em]`}>
-              {String(currentSlide + 1).padStart(2, "0")} — {String(slides.length).padStart(2, "0")}
-            </p>
-
-            <span className="w-px h-16 bg-gradient-to-t from-transparent to-[#C6952F]/40" />
-          </div>
         </div>
 
-        {/* Manifest bar (Statis) */}
+        {/* ==================== THUMBNAIL NAV — ngisi sisi kanan, sekaligus interaktif ==================== */}
+        {slides.length > 1 && (
+          <div className="hidden xl:flex flex-col gap-3 absolute right-10 top-1/2 -translate-y-1/2 z-20">
+            {slides.map((slide, index) => (
+              <button
+                key={slide.id}
+                onClick={() => setCurrentSlide(index)}
+                aria-label={`Lihat slide ${index + 1}`}
+                className={`relative w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300 ${
+                  index === currentSlide
+                    ? "ring-[3px] ring-[#C6952F] scale-105 shadow-xl"
+                    : "ring-1 ring-white/20 opacity-60 hover:opacity-90 hover:scale-105"
+                }`}
+              >
+                <Image src={resolveImageUrl(slide)} alt={slide.title || "Thumbnail"} fill sizes="64px" className="object-cover" />
+                {index === currentSlide && (
+                  <span className="absolute inset-0 bg-[#1B120B]/10" />
+                )}
+              </button>
+            ))}
+            <p className={`${marcellus.className} text-[#E4D6B8]/60 text-xs text-center tracking-[0.2em] mt-1`}>
+              {String(currentSlide + 1).padStart(2, "0")}/{String(slides.length).padStart(2, "0")}
+            </p>
+          </div>
+        )}
+
+        {/* Manifest bar (Statis) — TIDAK DIUBAH */}
         <div className="relative z-20 mx-6 sm:mx-10 md:mx-16 xl:mx-28 mb-8 md:mb-10">
           <div className="absolute -top-1.5 left-4 right-4 flex justify-between px-1">
             {Array.from({ length: 20 }).map((_, i) => <span key={i} className="w-1.5 h-1.5 rounded-full bg-[#3a1526]" />)}

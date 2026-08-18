@@ -79,7 +79,7 @@ export default function Footer() {
             </h3>
             <p className="text-[#E4D6B8]/70 text-sm md:text-base leading-relaxed">
               Jadilah yang pertama tahu tentang paket umrah terbaru, diskon
-              khusus, dan inspirasi perjalanan spiritual dari Kika Alsafar.
+              khusus, dan inspirasi perjalanan spiritual dari Kika Al-Safar.
             </p>
           </div>
           <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-3">
@@ -94,10 +94,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* BAGIAN TENGAH: Grid 12 Kolom */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
-          {/* Kolom 1: Brand Info */}
-          <div className="lg:col-span-4 flex flex-col pr-0 lg:pr-8">
+        {/* BAGIAN TENGAH: 2 Kolom — Brand & Kontak */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-16">
+          {/* Kolom 1: Brand Info — diperlebar mengisi ruang yang dulu dipakai 2 kolom shortcut */}
+          <div className="lg:col-span-5 flex flex-col">
             <Link href="/" className="flex items-center gap-3 group mb-6 w-max">
               <div className="w-12 h-12 bg-[#F6EFDF] rounded-full flex items-center justify-center group-hover:scale-105 transition-transform shadow-md shrink-0">
                 <svg
@@ -111,10 +111,10 @@ export default function Footer() {
               <span
                 className={`${marcellus.className} text-2xl md:text-3xl tracking-tight text-[#F6EFDF]`}
               >
-                Kika<span className="text-[#C6952F]">Alsafar</span>
+                Kika<span className="text-[#C6952F]">Al-Safar</span>
               </span>
             </Link>
-            <p className="text-[#E4D6B8]/70 text-sm leading-relaxed mb-8">
+            <p className="text-[#E4D6B8]/70 text-sm leading-relaxed mb-8 max-w-md">
               Penyelenggara perjalanan ibadah umrah dan wisata halal resmi
               yang berdedikasi memberikan pelayanan amanah, profesional, dan
               terpercaya bagi setiap jemaah.
@@ -132,53 +132,15 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Kolom 2: Tautan Cepat */}
-          <div className="lg:col-span-3 flex flex-col">
-            <h4 className="text-[#C6952F] font-semibold tracking-[0.2em] text-xs uppercase mb-6">
-              Tautan Cepat
-            </h4>
-            <div className="flex flex-col gap-4">
-              {quickLinks.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="text-[#E4D6B8]/70 hover:text-[#F6EFDF] flex items-center gap-3 group transition-colors w-max text-sm font-medium"
-                >
-                  <span className="w-1.5 h-1.5 rotate-45 bg-[#C6952F]/40 group-hover:bg-[#C6952F] transition-colors" />
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Kolom 3: Layanan */}
-          <div className="lg:col-span-2 flex flex-col">
-            <h4 className="text-[#C6952F] font-semibold tracking-[0.2em] text-xs uppercase mb-6">
-              Layanan
-            </h4>
-            <div className="flex flex-col gap-4">
-              {services.map((item) => (
-                <Link
-                  key={item}
-                  href="#"
-                  className="text-[#E4D6B8]/70 hover:text-[#F6EFDF] flex items-center gap-3 group transition-colors w-max text-sm font-medium"
-                >
-                  <span className="w-1.5 h-1.5 rotate-45 bg-[#C6952F]/40 group-hover:bg-[#C6952F] transition-colors" />
-                  {item}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Kolom 4: Kontak Cepat */}
-          <div className="lg:col-span-3 flex flex-col">
+          {/* Kolom 2: Kontak — mini-grid kartu, echo motif manifest bar */}
+          <div className="lg:col-span-7 flex flex-col">
             <h4 className="text-[#C6952F] font-semibold tracking-[0.2em] text-xs uppercase mb-6">
               Hubungi Kami
             </h4>
-            <div className="flex flex-col gap-5 text-sm text-[#E4D6B8]/70 font-medium">
-              <p className="flex items-start gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-dashed border-[#C6952F]/25">
                 <svg
-                  className="w-5 h-5 shrink-0 text-[#C6952F]/60 mt-0.5"
+                  className="w-5 h-5 shrink-0 text-[#C6952F]/70 mt-0.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -196,19 +158,22 @@ export default function Footer() {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                <span>
-                  Jln. Artzimar III no. A10,
-                  <br />
-                  Tegal Gundil, Bogor
-                </span>
-              </p>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wide text-[#E4D6B8]/40 mb-1">
+                    Alamat Kantor
+                  </p>
+                  <p className="text-sm text-[#F6EFDF]/85 font-medium leading-relaxed">
+                    Jln. Artzimar III no. A10, Tegal Gundil, Bogor
+                  </p>
+                </div>
+              </div>
 
               <a
                 href="tel:08212600250"
-                className="flex items-center gap-3 hover:text-[#C6952F] transition-colors w-max"
+                className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-dashed border-[#C6952F]/25 hover:border-[#C6952F]/60 hover:bg-white/10 transition-all"
               >
                 <svg
-                  className="w-5 h-5 shrink-0 text-[#C6952F]/60"
+                  className="w-5 h-5 shrink-0 text-[#C6952F]/70 mt-0.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -220,15 +185,22 @@ export default function Footer() {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                0821-2600-250
+                <div>
+                  <p className="text-[10px] uppercase tracking-wide text-[#E4D6B8]/40 mb-1">
+                    Telepon
+                  </p>
+                  <p className="text-sm text-[#F6EFDF]/85 font-medium">
+                    0821-2600-250
+                  </p>
+                </div>
               </a>
 
               <a
                 href="mailto:kikaalsafar@gmail.com"
-                className="flex items-center gap-3 hover:text-[#C6952F] transition-colors w-max"
+                className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-dashed border-[#C6952F]/25 hover:border-[#C6952F]/60 hover:bg-white/10 transition-all"
               >
                 <svg
-                  className="w-5 h-5 shrink-0 text-[#C6952F]/60"
+                  className="w-5 h-5 shrink-0 text-[#C6952F]/70 mt-0.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -240,15 +212,46 @@ export default function Footer() {
                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                kikaalsafar@gmail.com
+                <div>
+                  <p className="text-[10px] uppercase tracking-wide text-[#E4D6B8]/40 mb-1">
+                    Email
+                  </p>
+                  <p className="text-sm text-[#F6EFDF]/85 font-medium">
+                    kikaalsafar@gmail.com
+                  </p>
+                </div>
               </a>
+
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/5 border border-dashed border-[#C6952F]/25">
+                <svg
+                  className="w-5 h-5 shrink-0 text-[#C6952F]/70 mt-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wide text-[#E4D6B8]/40 mb-1">
+                    Jam Operasional
+                  </p>
+                  <p className="text-sm text-[#F6EFDF]/85 font-medium">
+                    Senin – Sabtu, 09.00–17.00
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* BAGIAN BAWAH: Copyright & Legalitas */}
         <div className="pt-8 border-t border-[#C6952F]/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs md:text-sm text-[#E4D6B8]/50 font-medium">
-          <p>&copy; {currentYear} Kika Alsafar. Hak Cipta Dilindungi.</p>
+          <p>&copy; {currentYear} Kika Al-Safar. Hak Cipta Dilindungi.</p>
           <div className="flex items-center gap-6">
             <Link href="#" className="hover:text-[#F6EFDF] transition-colors">
               Syarat & Ketentuan

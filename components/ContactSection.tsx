@@ -78,7 +78,7 @@ export default function ContactSection() {
           </h2>
 
           <p className="text-[#4a3f33] text-base md:text-lg leading-relaxed mt-4">
-            Tim konsultan Kika Alsafar siap melayani dan membantu
+            Tim konsultan Kika Al-Safar siap melayani dan membantu
             merencanakan perjalanan ibadah Anda. Jangan ragu untuk
             menghubungi kami melalui kontak di bawah ini.
           </p>

@@ -87,11 +87,7 @@ export default function DocumentationSection() {
   return (
     <section
       id="dokumentasi"
-      className="w-full py-28 md:py-36 relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(to bottom, #F6EFDF 0%, #1B120B 8%, #2E0E1B 25%, #5C0A2E 50%, #2E0E1B 75%, #1B120B 92%, #F6EFDF 100%)",
-      }}
+      className="w-full py-28  relative overflow-hidden z-10 shadow-2xl bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E]"
     >
       {/* Tekstur bintang geometris */}
       <svg
@@ -119,6 +115,37 @@ export default function DocumentationSection() {
       {/* Glow lembut */}
       <div className="absolute top-1/3 left-0 w-[450px] h-[450px] bg-[#C6952F] rounded-full blur-[130px] opacity-[0.12] -translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-1/4 right-0 w-[450px] h-[450px] bg-[#C6952F] rounded-full blur-[130px] opacity-[0.08] translate-x-1/3 pointer-events-none" />
+
+      {/* Mini-arch trim atas — sama persis motif di Footer */}
+      <svg
+        className="absolute top-0 left-0 w-full h-6 md:h-8 opacity-40 pointer-events-none"
+        viewBox="0 0 480 20"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0 20 Q 20 0 40 20 Q 60 0 80 20 Q 100 0 120 20 Q 140 0 160 20 Q 180 0 200 20 Q 220 0 240 20 Q 260 0 280 20 Q 300 0 320 20 Q 340 0 360 20 Q 380 0 400 20 Q 420 0 440 20 Q 460 0 480 20"
+          fill="none"
+          stroke="#C6952F"
+          strokeWidth="1"
+        />
+      </svg>
+
+      {/* Mini-arch trim bawah — dicerminkan dari yang atas */}
+      <svg
+        className="absolute bottom-0 left-0 w-full h-6 md:h-8 opacity-40 pointer-events-none"
+        viewBox="0 0 480 20"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        style={{ transform: "scaleY(-1)" }}
+      >
+        <path
+          d="M0 20 Q 20 0 40 20 Q 60 0 80 20 Q 100 0 120 20 Q 140 0 160 20 Q 180 0 200 20 Q 220 0 240 20 Q 260 0 280 20 Q 300 0 320 20 Q 340 0 360 20 Q 380 0 400 20 Q 420 0 440 20 Q 460 0 480 20"
+          fill="none"
+          stroke="#C6952F"
+          strokeWidth="1"
+        />
+      </svg>
 
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 md:px-16 relative z-10">
         {/* Header Section */}

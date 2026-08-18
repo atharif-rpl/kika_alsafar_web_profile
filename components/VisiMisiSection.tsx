@@ -55,7 +55,7 @@ export default function VisiMisiSection() {
           <h2
             className={`${marcellus.className} text-3xl md:text-4xl lg:text-5xl text-[#1B120B]`}
           >
-            Visi & <span className="text-[#5C0A2E]">Misi</span> Kika Alsafar
+            Visi & <span className="text-[#5C0A2E]">Misi</span> Kika Al-Safar
           </h2>
         </div>
 
@@ -116,7 +116,7 @@ export default function VisiMisiSection() {
 
             <div className="relative z-10 pt-6 border-t border-dashed border-[#C6952F]/30 flex items-center justify-between">
               <span className="text-sm text-[#E4D6B8]/80 font-medium tracking-wide">
-                Kika Alsafar PPIU Resmi
+                Kika Al-Safar PPIU Resmi
               </span>
               <div className="w-10 h-10 rounded-full bg-[#C6952F] flex items-center justify-center text-[#1B120B] shadow-lg group-hover:scale-110 transition-transform">
                 <svg

@@ -19,7 +19,7 @@ const contents = [
 
 export default function CompanyProfileSection() {
   return (
-    <section className="relative w-full py-20 md:py-28 bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] overflow-hidden">
+    <section className="relative w-full py-20 z-0 -mt-2 md:py-28 bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] overflow-hidden">
       {/* Ornamen Background */}
       <svg
         className="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none"
@@ -86,7 +86,7 @@ export default function CompanyProfileSection() {
               className={`${marcellus.className} text-[#F6EFDF] text-3xl md:text-4xl lg:text-5xl leading-tight mb-6`}
             >
               Unduh Company Profile{" "}
-              <span className="text-[#C6952F]">Kika Alsafar</span>
+              <span className="text-[#C6952F]">Kika Al-Safar</span>
             </h2>
 
             <p className="text-[#E4D6B8]/75 text-base leading-relaxed mb-7 max-w-xl mx-auto lg:mx-0">
