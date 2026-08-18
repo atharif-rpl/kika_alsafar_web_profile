@@ -17,7 +17,7 @@ function formatRupiah(digitsOnly: string) {
   return clean.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// Type definisi menyesuaikan dengan output API Laravel
+// Type definisi menyesuaikan dengan output API Laravel + Status Full
 type PackageType = {
   id: string | number;
   title: string;
@@ -27,6 +27,7 @@ type PackageType = {
   airline: string;
   month: string;
   duration: string;
+  isFull: boolean; // Status Sold Out / Kuota Penuh
 };
 
 export default function PackageListSection() {
@@ -38,32 +39,36 @@ export default function PackageListSection() {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        // FIX 1: Pastikan endpoint nembak ke /api/
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/packages`);
         const result = await response.json();
 
         if (result.success && result.data) {
           // Mapping data dari DB agar sesuai format yang dibutuhkan UI & Filter
           const formattedData = result.data.map((item: any) => {
-            // FIX 2: Antisipasi field snake_case dari Laravel
             const rawPrice = item.startingPrice || item.starting_price || item.price || "0";
             const priceValue = parseInt(rawPrice.toString().replace(/\D/g, ""), 10) || 0;
 
-            // FIX 3: Logika URL Gambar Absolute
             const rawImgUrl = item.image_url || item.image || "";
             const finalImageUrl = rawImgUrl
               ? (rawImgUrl.startsWith('http') ? rawImgUrl : `${process.env.NEXT_PUBLIC_API_URL}${rawImgUrl.startsWith('/') ? '' : '/'}${rawImgUrl}`)
-              : "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=800"; // Fallback aman
+              : "https://images.unsplash.com/photo-1565552643982-278783c462b5?q=80&w=800";
+
+            // Logika Deteksi Full (Manual dari Toggle Admin OR Kursi Penuh)
+            const rawIsFull = item.is_full === true || item.is_full === 1;
+            const filled = Number(item.filled_seats ?? item.filledSeats ?? 0);
+            const total = Number(item.total_seats ?? item.totalSeats ?? 0);
+            const isFull = rawIsFull || (total > 0 && filled >= total);
 
             return {
               id: item.id,
-              title: item.title || item.name || "Paket Kika Alsafar",
+              title: item.title || item.name || "Paket Kika Al-safar",
               image: finalImageUrl,
               price: rawPrice,
               priceValue: priceValue,
-              airline: item.airline || "Umum", // Fallback kalau field belum ada di DB
+              airline: item.airline || "Umum",
               month: item.month || "Kapan Saja",
               duration: item.duration || "-",
+              isFull: isFull,
             };
           });
 
@@ -92,7 +97,7 @@ export default function PackageListSection() {
 
   const [airline, setAirline] = useState("all");
   const [month, setMonth] = useState("all");
-  const [minPrice, setMinPrice] = useState("23.900.000"); // Default display
+  const [minPrice, setMinPrice] = useState("23.900.000");
   const [maxPrice, setMaxPrice] = useState("50.000.000");
   const [sortBy, setSortBy] = useState("relevan");
 
@@ -130,13 +135,11 @@ export default function PackageListSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Reset ke slide pertama tiap kali daftar hasil berubah
   useEffect(() => {
     setActiveIndex(0);
     trackRef.current?.scrollTo({ left: 0, behavior: "auto" });
   }, [results]);
 
-  // Auto-advance carousel
   useEffect(() => {
     if (isPaused || results.length <= 1) return;
     const timer = setInterval(() => {
@@ -145,7 +148,6 @@ export default function PackageListSection() {
     return () => clearInterval(timer);
   }, [isPaused, results.length]);
 
-  // Sync scroll position
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
@@ -165,7 +167,7 @@ export default function PackageListSection() {
   // ==================== LOADING STATE ====================
   if (isLoading) {
     return (
-      <section id="paket" className="w-full py-16 md:py-24 bg-[#F6EFDF] flex justify-center items-center min-h-[500px]">
+      <section id="packages" className="w-full py-16 md:py-24 bg-[#F6EFDF] flex justify-center items-center min-h-[500px]">
         <svg className="animate-spin h-10 w-10 text-[#5C0A2E]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -175,7 +177,7 @@ export default function PackageListSection() {
   }
 
   return (
-    <section id="paket" className="w-full py-16 md:py-24 bg-[#F6EFDF] relative overflow-hidden">
+    <section id="packages" className="w-full py-16 md:py-24 bg-[#F6EFDF] relative overflow-hidden">
       {/* Tekstur bintang geometris */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.035] pointer-events-none" aria-hidden="true">
         <defs>
@@ -322,23 +324,49 @@ export default function PackageListSection() {
               className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {results.map((pkg) => (
-                <div key={pkg.id} className="flex-none w-[86%] sm:w-[48%] lg:w-[32%] snap-start bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl border border-[#C6952F]/12 hover:border-[#C6952F]/35 transition-all duration-300 flex flex-col group cursor-pointer">
+                <div 
+                  key={pkg.id} 
+                  className={`flex-none w-[86%] sm:w-[48%] lg:w-[32%] snap-start bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl border transition-all duration-300 flex flex-col group cursor-pointer ${
+                    pkg.isFull ? 'border-red-200 opacity-95' : 'border-[#C6952F]/12 hover:border-[#C6952F]/35'
+                  }`}
+                >
                   
+                  {/* Gambar & Badge Sold Out */}
                   <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-[#F6EFDF]">
-                    <Image src={pkg.image} alt={pkg.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" />
+                    <Image 
+                      src={pkg.image} 
+                      alt={pkg.title} 
+                      fill 
+                      className={`object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out ${pkg.isFull ? 'grayscale-[25%]' : ''}`} 
+                    />
+                    
+                    {/* BADGE SOLD OUT */}
+                    {pkg.isFull && (
+                      <div className="absolute top-4 right-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg z-10 animate-pulse">
+                        Fully Booked
+                      </div>
+                    )}
+
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1B120B]/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
                   <div className="p-6 md:p-8 flex flex-col flex-grow">
-                    <h4 className="text-lg md:text-xl font-bold text-[#1B120B] mb-5 leading-snug group-hover:text-[#5C0A2E] transition-colors line-clamp-2">
+                    <h4 className={`text-lg md:text-xl font-bold mb-5 leading-snug transition-colors line-clamp-2 ${
+                      pkg.isFull ? 'text-gray-500 line-through' : 'text-[#1B120B] group-hover:text-[#5C0A2E]'
+                    }`}>
                       {pkg.title}
                     </h4>
 
                     <div className="bg-[#F6EFDF]/40 rounded-2xl p-5 mb-6 border border-[#C6952F]/15">
                       <span className="text-[10px] font-bold text-[#5C0A2E] tracking-widest uppercase">Harga Mulai Dari</span>
-                      <div className="text-2xl font-extrabold text-[#C6952F] mt-1 mb-2 drop-shadow-sm">{pkg.price}</div>
+                      <div className={`text-2xl font-extrabold mt-1 mb-2 drop-shadow-sm ${pkg.isFull ? 'text-gray-400' : 'text-[#C6952F]'}`}>
+                        {pkg.price}
+                      </div>
                       <p className="text-xs text-[#5c5142] leading-relaxed">
-                        Harga estimasi terendah pada grup paket ini. Pilih salah satu tanggal untuk melihat detail lengkap.
+                        {pkg.isFull 
+                          ? 'Maaf, kuota untuk keberangkatan paket ini sudah penuh.' 
+                          : 'Harga estimasi terendah pada grup paket ini. Pilih salah satu tanggal untuk melihat detail lengkap.'
+                        }
                       </p>
                     </div>
 
@@ -353,8 +381,13 @@ export default function PackageListSection() {
                       </span>
                     </div>
 
-                    <div className="bg-[#F6EFDF] rounded-xl p-4 text-center text-xs font-semibold text-[#5c5142] group-hover:bg-[#5C0A2E] group-hover:text-[#F6EFDF] transition-colors duration-300">
-                      Pilih opsi di bawah untuk melihat detail paket.
+                    {/* Footer Card Status */}
+                    <div className={`rounded-xl p-4 text-center text-xs font-semibold transition-colors duration-300 ${
+                      pkg.isFull 
+                        ? 'bg-red-50 text-red-600 font-bold border border-red-200' 
+                        : 'bg-[#F6EFDF] text-[#5c5142] group-hover:bg-[#5C0A2E] group-hover:text-[#F6EFDF]'
+                    }`}>
+                      {pkg.isFull ? 'Kuota Penuh (Sold Out)' : 'Pilih opsi di bawah untuk melihat detail paket.'}
                     </div>
                   </div>
                 </div>
