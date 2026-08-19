@@ -259,8 +259,10 @@ export default function HeroSection() {
           </div>
 
           <span className="hidden md:inline-flex absolute -top-3 right-6 z-30 items-center gap-1.5 bg-[#5C0A2E] text-[#F6EFDF] text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C6952F] animate-pulse" />
-            Buruan, Slot Terbatas
+            <svg className="w-3 h-3 text-[#C6952F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            PPIU Resmi Kemenag RI
           </span>
 
           <div className="bg-[#F6EFDF] rounded-2xl shadow-xl px-4 sm:px-6 py-5 flex flex-col sm:flex-row sm:items-center divide-y sm:divide-y-0 sm:divide-x divide-dashed divide-[#C6952F]/40">
@@ -279,30 +281,31 @@ export default function HeroSection() {
             </div>
 
             <div className="flex items-center gap-3 py-3 sm:py-2 sm:px-4 rounded-xl transition-all duration-300 hover:bg-white hover:-translate-y-0.5 cursor-default">
-              <div className="flex -space-x-2 shrink-0">
-                {["A", "B", "C"].map((letter, i) => (
-                  <span key={i} className="w-7 h-7 rounded-full bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] border-2 border-[#F6EFDF] flex items-center justify-center text-[9px] font-bold text-[#C6952F]">{letter}</span>
-                ))}
-              </div>
-              <div>
-                <p className="text-[#1B120B] font-bold text-sm">10.000+</p>
-                <p className="text-[#8a7a5f] text-[11px] uppercase tracking-wide">Jemaah Berangkat</p>
-              </div>
-            </div>
+      <div className="flex -space-x-2 shrink-0">
+        {/* Mengganti huruf A, B, C dengan icon siluet jemaah */}
+        {[1, 2, 3].map((_, i) => (
+          <span key={i} className="w-7 h-7 rounded-full bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] border-2 border-[#F6EFDF] flex items-center justify-center text-[#C6952F]">
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+          </span>
+        ))}
+      </div>
+      <div>
+        <p className="text-[#1B120B] font-bold text-sm">Berpengalaman</p>
+        <p className="text-[#8a7a5f] text-[11px] uppercase tracking-wide">Mendampingi Jemaah</p>
+      </div>
+    </div>
 
-            <div className="flex flex-col gap-2 py-3 sm:py-2 sm:px-4 rounded-xl transition-all duration-300 hover:bg-white hover:-translate-y-0.5 cursor-default sm:min-w-[190px]">
-              <div className="flex items-center gap-3">
-                <span className="relative flex h-2.5 w-2.5 shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5C0A2E] opacity-60" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#5C0A2E]" />
-                </span>
-                <div>
-                  <p className="text-[#1B120B] font-bold text-sm">5 Seat Tersisa</p>
-                  <p className="text-[#8a7a5f] text-[11px] uppercase tracking-wide">Paket VIP · 25 Ags 2026</p>
-                </div>
-              </div>
-              <div className="w-full h-1 bg-[#5C0A2E]/10 rounded-full overflow-hidden ml-5">
-                <div className="h-full w-[15%] bg-gradient-to-r from-[#5C0A2E] to-[#C6952F] rounded-full" />
+            <div className="flex items-center gap-3 py-3 sm:py-2 sm:px-4 rounded-xl transition-all duration-300 hover:bg-white hover:-translate-y-0.5 cursor-default sm:min-w-[190px]">
+              <span className="w-9 h-9 rounded-full bg-[#5C0A2E]/8 flex items-center justify-center shrink-0">
+                <svg className="w-4.5 h-4.5 text-[#5C0A2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8-1.5 0-2.91-.32-4.16-.9L3 20l1.05-3.16A7.94 7.94 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </span>
+              <div>
+                <p className="text-[#1B120B] font-bold text-sm">Konsultasi Gratis</p>
+                <p className="text-[#8a7a5f] text-[11px] uppercase tracking-wide">Respon Cepat via WhatsApp</p>
               </div>
             </div>
 

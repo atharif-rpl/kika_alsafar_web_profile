@@ -326,40 +326,55 @@ export default function PackageListSection() {
               {results.map((pkg) => (
                 <div 
                   key={pkg.id} 
-                  className={`flex-none w-[86%] sm:w-[48%] lg:w-[32%] snap-start bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl border transition-all duration-300 flex flex-col group cursor-pointer ${
-                    pkg.isFull ? 'border-red-200 opacity-95' : 'border-[#C6952F]/12 hover:border-[#C6952F]/35'
+                  className={`relative flex-none w-[86%] sm:w-[48%] lg:w-[32%] snap-start bg-white rounded-[2rem] overflow-hidden shadow-sm border transition-all duration-300 flex flex-col group ${
+                    pkg.isFull
+                      ? 'grayscale border-[#5C0A2E]/20 cursor-not-allowed'
+                      : 'border-[#C6952F]/12 hover:border-[#C6952F]/35 hover:shadow-xl cursor-pointer'
                   }`}
                 >
                   
-                  {/* Gambar & Badge Sold Out */}
+                  {/* Gambar & Overlay Sold Out */}
                   <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-[#F6EFDF]">
                     <Image 
                       src={pkg.image} 
                       alt={pkg.title} 
                       fill 
-                      className={`object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out ${pkg.isFull ? 'grayscale-[25%]' : ''}`} 
+                      className={`object-cover transition-transform duration-700 ease-in-out ${
+                        pkg.isFull ? '' : 'group-hover:scale-105'
+                      }`} 
                     />
-                    
-                    {/* BADGE SOLD OUT */}
+
                     {pkg.isFull && (
-                      <div className="absolute top-4 right-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg z-10 animate-pulse">
-                        Fully Booked
-                      </div>
+                      <>
+                        {/* Tint gelap permanen — bukan cuma pas hover */}
+                        <div className="absolute inset-0 bg-[#1B120B]/55" />
+
+                        {/* Stempel tengah — satu sinyal yang jelas, dalam palet kita */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] border-2 border-[#C6952F]/60 rounded-2xl px-6 py-3 -rotate-6 shadow-xl">
+                            <span className="text-[#F6EFDF] text-sm font-black uppercase tracking-[0.2em] whitespace-nowrap">
+                              Out of Stock
+                            </span>
+                          </div>
+                        </div>
+                      </>
                     )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1B120B]/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {!pkg.isFull && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1B120B]/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    )}
                   </div>
 
                   <div className="p-6 md:p-8 flex flex-col flex-grow">
                     <h4 className={`text-lg md:text-xl font-bold mb-5 leading-snug transition-colors line-clamp-2 ${
-                      pkg.isFull ? 'text-gray-500 line-through' : 'text-[#1B120B] group-hover:text-[#5C0A2E]'
+                      pkg.isFull ? 'text-[#8a7a5f] line-through' : 'text-[#1B120B] group-hover:text-[#5C0A2E]'
                     }`}>
                       {pkg.title}
                     </h4>
 
                     <div className="bg-[#F6EFDF]/40 rounded-2xl p-5 mb-6 border border-[#C6952F]/15">
                       <span className="text-[10px] font-bold text-[#5C0A2E] tracking-widest uppercase">Harga Mulai Dari</span>
-                      <div className={`text-2xl font-extrabold mt-1 mb-2 drop-shadow-sm ${pkg.isFull ? 'text-gray-400' : 'text-[#C6952F]'}`}>
+                      <div className={`text-2xl font-extrabold mt-1 mb-2 drop-shadow-sm ${pkg.isFull ? 'text-[#8a7a5f]/70' : 'text-[#C6952F]'}`}>
                         {pkg.price}
                       </div>
                       <p className="text-xs text-[#5c5142] leading-relaxed">
@@ -384,10 +399,10 @@ export default function PackageListSection() {
                     {/* Footer Card Status */}
                     <div className={`rounded-xl p-4 text-center text-xs font-semibold transition-colors duration-300 ${
                       pkg.isFull 
-                        ? 'bg-red-50 text-red-600 font-bold border border-red-200' 
+                        ? 'bg-[#5C0A2E]/8 text-[#5C0A2E] font-bold border border-[#5C0A2E]/20' 
                         : 'bg-[#F6EFDF] text-[#5c5142] group-hover:bg-[#5C0A2E] group-hover:text-[#F6EFDF]'
                     }`}>
-                      {pkg.isFull ? 'Kuota Penuh (Sold Out)' : 'Pilih opsi di bawah untuk melihat detail paket.'}
+                      {pkg.isFull ? 'Out of Stock' : 'Pilih opsi di bawah untuk melihat detail paket.'}
                     </div>
                   </div>
                 </div>
