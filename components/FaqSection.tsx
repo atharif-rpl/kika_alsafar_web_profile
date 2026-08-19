@@ -64,9 +64,9 @@ export default function FaqSection() {
   ];
 
   const HargaTermasukContent = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 md:gap-x-6 gap-y-3 mt-2">
       {includedItems.map((item, i) => (
-        <div key={i} className="flex items-center gap-2.5 text-sm text-[#1B120B]">
+        <div key={i} className="flex items-center gap-2.5 text-xs sm:text-sm text-[#1B120B]">
           <span className="w-5 h-5 rounded-full bg-[#5C0A2E]/10 flex items-center justify-center shrink-0">
             <svg className="w-3 h-3 text-[#5C0A2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -128,36 +128,36 @@ export default function FaqSection() {
   ];
 
   const SyaratKetentuanContent = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6 mt-2">
       {termsSections.map((section, i) => (
         <div key={i}>
           <div className="inline-flex items-center gap-2 bg-[#5C0A2E]/8 rounded-full pl-1 pr-4 py-1 mb-3">
             <span className="w-6 h-6 rounded-full bg-[#5C0A2E] flex items-center justify-center shrink-0">
               <span className="w-1.5 h-1.5 rotate-45 bg-[#C6952F]" />
             </span>
-            <span className="text-xs font-bold text-[#5C0A2E] uppercase tracking-wide">
+            <span className="text-[11px] sm:text-xs font-bold text-[#5C0A2E] uppercase tracking-wide">
               {section.title}
             </span>
           </div>
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-2.5">
             {section.items.map((item, idx) => {
               if (typeof item === "string") {
                 return (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-[#5c5142] leading-relaxed">
+                  <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-[#5c5142] leading-relaxed">
                     <span className="w-1 h-1 rounded-full bg-[#C6952F] mt-2 shrink-0" />
                     {item}
                   </li>
                 );
               }
               return (
-                <li key={idx} className="text-sm text-[#5c5142] leading-relaxed">
+                <li key={idx} className="text-xs sm:text-sm text-[#5c5142] leading-relaxed">
                   <div className="flex items-start gap-2">
                     <span className="w-1 h-1 rounded-full bg-[#C6952F] mt-2 shrink-0" />
                     {item.text}
                   </div>
-                  <ul className="flex flex-col gap-1.5 mt-1.5 ml-3 pl-3 border-l border-dashed border-[#C6952F]/30">
+                  <ul className="flex flex-col gap-1.5 mt-2 ml-3 pl-3 border-l border-dashed border-[#C6952F]/30">
                     {item.subItems.map((sub, subIdx) => (
-                      <li key={subIdx} className="text-xs text-[#5c5142]/90">
+                      <li key={subIdx} className="text-[11px] sm:text-xs text-[#5c5142]/90 leading-relaxed">
                         {sub}
                       </li>
                     ))}
@@ -171,13 +171,11 @@ export default function FaqSection() {
     </div>
   );
 
-  // FIX TYPESCRIPT: Tambahin tipe data explicitly biar dia tau content/answer opsional
   const combinedFaqs: { question: string; answer?: string; content?: React.ReactNode }[] = [
     ...dbFaqs.map((faq) => ({
       question: faq.question,
       answer: faq.answer,
     })),
-    // Kita simpan 2 FAQ khusus ini di bawah biar UI keren lu ga ilang
     {
       question: "Apa saja yang sudah termasuk dalam harga paket secara rinci?",
       content: <HargaTermasukContent />,
@@ -195,7 +193,7 @@ export default function FaqSection() {
   return (
     <section
       id="faq"
-      className="w-full py-24 bg-[#F6EFDF] relative overflow-hidden"
+      className="w-full py-16 md:py-24 bg-[#F6EFDF] relative overflow-hidden"
     >
       <svg
         className="absolute inset-0 w-full h-full opacity-[0.035] pointer-events-none"
@@ -219,25 +217,26 @@ export default function FaqSection() {
         <rect width="100%" height="100%" fill="url(#faqStarMotif)" />
       </svg>
 
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 md:px-16 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-10 md:px-16 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-start">
           
           {/* KOLOM KIRI: Judul & Info CS */}
-          <div className="lg:col-span-5 sticky top-32">
+          {/* Diubah jadi lg:sticky biar di mobile scrollnya natural dan ga nutup konten */}
+          <div className="lg:col-span-5 relative lg:sticky lg:top-32">
             <div className="flex items-center gap-3 mb-4">
               <span className="w-2 h-2 rotate-45 bg-[#C6952F]" />
-              <h3 className="text-[#5C0A2E] font-semibold text-xs sm:text-sm tracking-[0.25em] uppercase">
+              <h3 className="text-[#5C0A2E] font-semibold text-[10px] sm:text-xs md:text-sm tracking-[0.25em] uppercase">
                 Informasi Umum
               </h3>
             </div>
             <h2
-              className={`${marcellus.className} text-3xl md:text-4xl lg:text-5xl text-[#1B120B] mb-6 leading-[1.25]`}
+              className={`${marcellus.className} text-3xl sm:text-4xl lg:text-5xl text-[#1B120B] mb-4 sm:mb-6 leading-[1.25]`}
             >
               Pertanyaan Seputar{" "}
               <span className="text-[#5C0A2E] relative inline-block">
                 Perjalanan
                 <svg
-                  className="absolute -bottom-2 left-0 w-full h-3"
+                  className="absolute -bottom-1.5 md:-bottom-2 left-0 w-full h-2 md:h-3"
                   viewBox="0 0 100 12"
                   preserveAspectRatio="none"
                   aria-hidden="true"
@@ -253,16 +252,16 @@ export default function FaqSection() {
                 </svg>
               </span>
             </h2>
-            <p className="text-[#4a3f33] text-base md:text-lg mb-8 leading-relaxed">
+            <p className="text-[#4a3f33] text-sm sm:text-base md:text-lg mb-8 leading-relaxed">
               Temukan jawaban atas pertanyaan yang paling sering diajukan oleh
               calon jemaah. Jika Anda memiliki pertanyaan lain yang lebih
               spesifik, jangan ragu untuk menghubungi tim kami.
             </p>
 
-            <div className="p-6 bg-white rounded-3xl border border-[#C6952F]/20 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <div className="w-14 h-14 bg-[#F6EFDF] rounded-full flex items-center justify-center text-[#5C0A2E] shadow-sm shrink-0">
+            <div className="p-5 sm:p-6 bg-white rounded-3xl border border-[#C6952F]/20 flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 shadow-sm">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#F6EFDF] rounded-full flex items-center justify-center text-[#5C0A2E] shadow-sm shrink-0">
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -276,16 +275,16 @@ export default function FaqSection() {
                 </svg>
               </div>
               <div>
-                <h4 className="font-bold text-[#1B120B] mb-1">
+                <h4 className="font-bold text-[#1B120B] mb-1 sm:mb-1.5 text-sm sm:text-base">
                   Masih Butuh Bantuan?
                 </h4>
                 <Link
                   href="#contact"
-                  className="text-sm font-semibold text-[#5C0A2E] hover:text-[#C6952F] transition-colors flex items-center gap-1"
+                  className="text-xs sm:text-sm font-semibold text-[#5C0A2E] hover:text-[#C6952F] transition-colors flex items-center gap-1.5"
                 >
                   Hubungi Customer Service
                   <svg
-                    className="w-4 h-4"
+                    className="w-3.5 h-3.5 sm:w-4 sm:h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -303,7 +302,7 @@ export default function FaqSection() {
           </div>
 
           {/* KOLOM KANAN: Accordion FAQ List */}
-          <div className="lg:col-span-7 flex flex-col gap-4">
+          <div className="lg:col-span-7 flex flex-col gap-3 sm:gap-4">
             
             {/* Tampilan Loading */}
             {isLoading ? (
@@ -314,7 +313,7 @@ export default function FaqSection() {
                 </svg>
               </div>
             ) : combinedFaqs.length === 0 ? (
-              <div className="bg-white/60 rounded-3xl p-8 text-center text-gray-500">
+              <div className="bg-white/60 rounded-3xl p-6 sm:p-8 text-center text-sm sm:text-base text-gray-500">
                 Belum ada pertanyaan yang ditambahkan.
               </div>
             ) : (
@@ -325,16 +324,16 @@ export default function FaqSection() {
                     key={index}
                     className={`border transition-colors duration-300 rounded-3xl overflow-hidden ${
                       isOpen
-                        ? "border-[#5C0A2E]/40 bg-white shadow-lg"
+                        ? "border-[#5C0A2E]/40 bg-white shadow-lg shadow-[#5C0A2E]/5"
                         : "border-[#C6952F]/15 bg-white/60 hover:bg-white"
                     }`}
                   >
                     <button
                       onClick={() => toggleFaq(index)}
-                      className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                      className="w-full flex items-center justify-between p-4 sm:p-5 md:p-6 text-left focus:outline-none gap-4"
                     >
                       <span
-                        className={`text-base md:text-lg font-bold pr-4 ${
+                        className={`text-sm sm:text-base md:text-lg font-bold ${
                           isOpen ? "text-[#5C0A2E]" : "text-[#1B120B]"
                         }`}
                       >
@@ -343,14 +342,14 @@ export default function FaqSection() {
 
                       {/* Ikon Plus / Minus */}
                       <div
-                        className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center transition-colors duration-300 ${
+                        className={`w-8 h-8 md:w-10 md:h-10 shrink-0 rounded-full flex items-center justify-center transition-colors duration-300 ${
                           isOpen
                             ? "bg-[#5C0A2E] text-[#C6952F]"
                             : "bg-[#F6EFDF] text-[#5C0A2E]/60 shadow-sm"
                         }`}
                       >
                         <svg
-                          className={`w-5 h-5 transition-transform duration-300 ${
+                          className={`w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 ${
                             isOpen ? "rotate-45" : "rotate-0"
                           }`}
                           fill="none"
@@ -374,7 +373,7 @@ export default function FaqSection() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <div className="p-6 pt-0 text-[#5c5142] leading-relaxed text-sm md:text-base border-t border-dashed border-[#C6952F]/30 mt-2">
+                        <div className="p-4 sm:p-5 md:p-6 pt-0 text-[#5c5142] leading-relaxed text-xs sm:text-sm md:text-base border-t border-dashed border-[#C6952F]/30 mx-4 sm:mx-5 md:mx-6 mt-1 mb-4 sm:mb-5 md:mb-6">
                           {faq.content ? faq.content : <p>{faq.answer}</p>}
                         </div>
                       </div>

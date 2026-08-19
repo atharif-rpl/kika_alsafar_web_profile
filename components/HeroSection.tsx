@@ -44,8 +44,7 @@ const fallbackSlides: SlideType[] = [
   }
 ];
 
-// Helper — sama persis logikanya kayak sebelumnya, cuma dipakai ulang
-// buat background foto besar & thumbnail nav.
+// Helper untuk load image
 function resolveImageUrl(slide: SlideType) {
   const imgSource = slide.image || slide.image_url || "";
   return imgSource?.startsWith("http")
@@ -58,16 +57,14 @@ export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 1. Fetch Data dari Database Laravel — TIDAK DIUBAH
+  // Fetch Data dari API Laravel
   useEffect(() => {
     const fetchSliders = async () => {
       try {
-        // FIX 1: Pastikan endpoint nembak ke /api/
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`);
         const result = await response.json();
         
         if (result.success && result.data.length > 0) {
-          // FIX 2: Antisipasi perbedaan penamaan field (is_active vs isActive)
           const activeSlides = result.data.filter((slide: SlideType) => slide.isActive || slide.is_active);
           setSlides(activeSlides.length > 0 ? activeSlides : fallbackSlides);
         } else {
@@ -84,7 +81,7 @@ export default function HeroSection() {
     fetchSliders();
   }, []);
 
-  // 2. Logika Auto Slide — TIDAK DIUBAH
+  // Logika Auto Slide
   useEffect(() => {
     if (slides.length <= 1) return;
     
@@ -95,7 +92,7 @@ export default function HeroSection() {
     return () => clearInterval(timer);
   }, [slides.length, currentSlide]);
 
-  // Tampilan Loading Skeleton — TIDAK DIUBAH
+  // Tampilan Loading
   if (isLoading) {
     return (
       <div className="relative w-full h-screen min-h-[700px] flex items-center justify-center bg-gradient-to-br from-[#1B120B] via-[#2E0E1E] to-[#5C0A2E]">
@@ -109,7 +106,6 @@ export default function HeroSection() {
 
   const activeData = slides[currentSlide];
   
-  // Helper untuk membaca data dengan aman (camelCase atau snake_case) — TIDAK DIUBAH
   const highlightText = activeData?.highlightWord || activeData?.highlight_word || "Baitullah";
   const btnText = activeData?.buttonText || activeData?.button_text || "Pesan Sekarang";
   const btnLink = activeData?.buttonLink || activeData?.button_link || "#";
@@ -119,7 +115,7 @@ export default function HeroSection() {
       {/* --- HERO FULL SCREEN --- */}
       <section className="relative w-full h-screen min-h-[700px] overflow-hidden flex flex-col bg-gradient-to-br from-[#1B120B] via-[#2E0E1E] to-[#5C0A2E]">
         
-        {/* ==================== BACKGROUND FOTO — crossfade sinkron sama teks ==================== */}
+        {/* ==================== BACKGROUND FOTO ==================== */}
         <div className="absolute inset-0 z-0">
           {slides.map((slide, index) => (
             <div
@@ -140,12 +136,12 @@ export default function HeroSection() {
           ))}
         </div>
 
-        {/* Overlay tint — tetap di dalam palet ink-maroon, bukan hitam generik */}
+        {/* Overlay tint */}
         <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[#1B120B] via-[#1B120B]/55 to-[#1B120B]/15" />
         <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#1B120B]/85 via-[#1B120B]/35 to-transparent" />
         <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#5C0A2E]/20 via-transparent to-transparent" />
 
-        {/* Tekstur bintang geometris, di atas foto */}
+        {/* Tekstur bintang geometris */}
         <svg className="absolute inset-0 w-full h-full z-[2] opacity-[0.06] pointer-events-none" aria-hidden="true">
           <defs>
             <pattern id="starMotif" width="56" height="56" patternUnits="userSpaceOnUse">
@@ -226,7 +222,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* ==================== THUMBNAIL NAV — ngisi sisi kanan, sekaligus interaktif ==================== */}
+        {/* ==================== THUMBNAIL NAV ==================== */}
         {slides.length > 1 && (
           <div className="hidden xl:flex flex-col gap-3 absolute right-10 top-1/2 -translate-y-1/2 z-20">
             {slides.map((slide, index) => (
@@ -252,8 +248,8 @@ export default function HeroSection() {
           </div>
         )}
 
-        {/* Manifest bar (Statis) — TIDAK DIUBAH */}
-        <div className="relative z-20 mx-6 sm:mx-10 md:mx-16 xl:mx-28 mb-8 md:mb-10">
+        {/* ==================== MANIFEST BAR (STATIS & RESPONSIF) ==================== */}
+        <div className="relative z-20 mx-4 sm:mx-10 md:mx-16 xl:mx-28 mb-8 md:mb-10">
           <div className="absolute -top-1.5 left-4 right-4 flex justify-between px-1">
             {Array.from({ length: 20 }).map((_, i) => <span key={i} className="w-1.5 h-1.5 rounded-full bg-[#3a1526]" />)}
           </div>
@@ -262,57 +258,62 @@ export default function HeroSection() {
             <svg className="w-3 h-3 text-[#C6952F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            PPIU Resmi Kemenag RI
+            Layanan Umroh Terpercaya
           </span>
 
-          <div className="bg-[#F6EFDF] rounded-2xl shadow-xl px-4 sm:px-6 py-5 flex flex-col sm:flex-row sm:items-center divide-y sm:divide-y-0 sm:divide-x divide-dashed divide-[#C6952F]/40">
-            <div className="flex items-center gap-3 py-3 sm:py-2 sm:px-4 rounded-xl transition-all duration-300 hover:bg-white hover:-translate-y-0.5 cursor-default">
-              <div className="flex flex-col">
-                <div className="flex items-center gap-0.5 mb-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <svg key={i} className="w-3 h-3 text-[#C6952F]" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          {/* Container utama: Berubah dari vertikal (mobile) ke horizontal (md/desktop) */}
+          <div className="bg-[#F6EFDF] rounded-2xl shadow-xl p-5 md:px-6 md:py-4 flex flex-col md:flex-row md:items-center divide-y md:divide-y-0 md:divide-x divide-dashed divide-[#C6952F]/40">
+            
+            {/* Item 1: Rating */}
+            <div className="flex flex-col gap-1 py-4 md:py-2 md:px-4 w-full md:w-auto cursor-default">
+              <div className="flex items-center gap-1 mb-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <svg key={i} className="w-3.5 h-3.5 text-[#C6952F]" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-[#1B120B] font-bold text-sm leading-tight">4.9 <span className="text-[#8a7a5f] font-medium">/ 5</span></p>
+              <p className="text-[#8a7a5f] text-[10px] md:text-[11px] uppercase tracking-wider">Kepuasan Jemaah</p>
+            </div>
+
+            {/* Item 2: Berpengalaman */}
+            <div className="flex items-center gap-3.5 py-4 md:py-2 md:px-4 w-full md:w-auto cursor-default">
+              <div className="flex -space-x-2 shrink-0">
+                {[1, 2, 3].map((_, i) => (
+                  <span key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] border-2 border-[#F6EFDF] flex items-center justify-center text-[#C6952F] shadow-sm">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
-                  ))}
-                </div>
-                <p className="text-[#1B120B] font-bold text-sm leading-tight">4.9 <span className="text-[#8a7a5f] font-medium">/ 5</span></p>
-                <p className="text-[#8a7a5f] text-[11px] uppercase tracking-wide">Kepuasan Jemaah</p>
+                  </span>
+                ))}
+              </div>
+              <div className="flex flex-col">
+                <p className="text-[#1B120B] font-bold text-sm">Berpengalaman</p>
+                <p className="text-[#8a7a5f] text-[10px] md:text-[11px] uppercase tracking-wider mt-0.5">Mendampingi Jemaah</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 py-3 sm:py-2 sm:px-4 rounded-xl transition-all duration-300 hover:bg-white hover:-translate-y-0.5 cursor-default">
-      <div className="flex -space-x-2 shrink-0">
-        {/* Mengganti huruf A, B, C dengan icon siluet jemaah */}
-        {[1, 2, 3].map((_, i) => (
-          <span key={i} className="w-7 h-7 rounded-full bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E] border-2 border-[#F6EFDF] flex items-center justify-center text-[#C6952F]">
-            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-            </svg>
-          </span>
-        ))}
-      </div>
-      <div>
-        <p className="text-[#1B120B] font-bold text-sm">Berpengalaman</p>
-        <p className="text-[#8a7a5f] text-[11px] uppercase tracking-wide">Mendampingi Jemaah</p>
-      </div>
-    </div>
-
-            <div className="flex items-center gap-3 py-3 sm:py-2 sm:px-4 rounded-xl transition-all duration-300 hover:bg-white hover:-translate-y-0.5 cursor-default sm:min-w-[190px]">
-              <span className="w-9 h-9 rounded-full bg-[#5C0A2E]/8 flex items-center justify-center shrink-0">
-                <svg className="w-4.5 h-4.5 text-[#5C0A2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Item 3: Konsultasi */}
+            <div className="flex items-center gap-3.5 py-4 md:py-2 md:px-4 w-full md:w-auto cursor-default md:min-w-[190px]">
+              <span className="w-10 h-10 rounded-full bg-[#5C0A2E]/10 flex items-center justify-center shrink-0">
+                <svg className="w-5 h-5 text-[#5C0A2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8-1.5 0-2.91-.32-4.16-.9L3 20l1.05-3.16A7.94 7.94 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </span>
-              <div>
+              <div className="flex flex-col">
                 <p className="text-[#1B120B] font-bold text-sm">Konsultasi Gratis</p>
-                <p className="text-[#8a7a5f] text-[11px] uppercase tracking-wide">Respon Cepat via WhatsApp</p>
+                <p className="text-[#8a7a5f] text-[10px] md:text-[11px] uppercase tracking-wider mt-0.5">Respon Cepat via WhatsApp</p>
               </div>
             </div>
 
-            <Link href="#detail" className="group/cta flex items-center justify-center gap-1.5 mt-4 sm:mt-0 sm:ml-auto sm:px-5 bg-[#5C0A2E] hover:bg-[#C6952F] text-[#F6EFDF] hover:text-[#1B120B] text-xs font-bold px-5 py-3 rounded-full transition-all duration-300 shadow-md">
-              Lihat Detail
-              <svg className="w-3.5 h-3.5 group-hover/cta:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-            </Link>
+            {/* Button */}
+            <div className="pt-5 md:pt-0 md:pl-5 md:ml-auto w-full md:w-auto">
+              <Link href="#detail" className="group flex items-center justify-center gap-2 w-full md:w-auto bg-[#5C0A2E] hover:bg-[#7A0D3D] text-[#F6EFDF] text-sm md:text-xs font-bold px-6 py-3.5 md:py-3 rounded-full transition-all duration-300 shadow-md">
+                Lihat Detail
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

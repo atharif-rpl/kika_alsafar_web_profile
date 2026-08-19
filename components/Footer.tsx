@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import { Marcellus } from "next/font/google";
 
 const marcellus = Marcellus({
@@ -10,23 +13,40 @@ const marcellus = Marcellus({
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const quickLinks = [
-    { label: "Tentang Kami", href: "#tentang" },
-    { label: "Paket Umrah", href: "#paket" },
-    { label: "Galeri Perjalanan", href: "#galeri" },
-    { label: "Tanya Jawab (FAQ)", href: "#faq" },
-  ];
-
-  const services = [
-    "Umrah Reguler",
-    "Umrah VIP",
-    "Umrah Plus Turki",
-    "Wisata Halal",
+  // Data Social Media dengan Icon SVG murni
+  const socialLinks = [
+    {
+      name: "Instagram",
+      href: "#",
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Facebook",
+      href: "#",
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+        </svg>
+      ),
+    },
+    {
+      name: "TikTok",
+      href: "#",
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
+        </svg>
+      ),
+    },
   ];
 
   return (
     <footer className="w-full relative overflow-hidden text-[#F6EFDF] rounded-t-[2.5rem] md:rounded-t-[4rem] shadow-2xl mt-12 md:mt-20 bg-gradient-to-br from-[#1B120B] via-[#2E0E1B] to-[#5C0A2E]">
-      {/* Tekstur bintang geometris — konsisten dengan hero */}
+      {/* Tekstur bintang geometris */}
       <svg
         className="absolute inset-0 w-full h-full opacity-[0.06] pointer-events-none"
         aria-hidden="true"
@@ -49,11 +69,11 @@ export default function Footer() {
         <rect width="100%" height="100%" fill="url(#footerStarMotif)" />
       </svg>
 
-      {/* Glow lembut, senada hero */}
+      {/* Glow lembut */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C6952F] rounded-full blur-[150px] opacity-10 pointer-events-none translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#F6EFDF] rounded-full blur-[150px] opacity-5 pointer-events-none -translate-x-1/3 translate-y-1/3" />
 
-      {/* Mini-arch trim — gema dari arch photo di hero */}
+      {/* Mini-arch trim */}
       <svg
         className="absolute top-0 left-0 w-full h-6 md:h-8 opacity-40 pointer-events-none"
         viewBox="0 0 480 20"
@@ -96,22 +116,21 @@ export default function Footer() {
 
         {/* BAGIAN TENGAH: 2 Kolom — Brand & Kontak */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-16">
-          {/* Kolom 1: Brand Info — diperlebar mengisi ruang yang dulu dipakai 2 kolom shortcut */}
+          {/* Kolom 1: Brand Info */}
           <div className="lg:col-span-5 flex flex-col">
             <Link href="/" className="flex items-center gap-3 group mb-6 w-max">
-              <div className="w-12 h-12 bg-[#F6EFDF] rounded-full flex items-center justify-center group-hover:scale-105 transition-transform shadow-md shrink-0">
-                <svg
-                  className="w-6 h-6 text-[#5C0A2E]"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 3c-2.5 3-3.5 6-1.8 9.6C7.8 11.8 6 9.5 6 6.5 3.5 8.7 2 11.7 2 15c0 4.4 4.5 6 6 6 .3-1 1-2 2-2.5-.6 1-.5 2 .2 2.5.6-1.2 2-1.5 2.8-1 .5-1 .3-2.2-.5-3 1.6.2 2.7 1.4 3 3 1.9-1 4.5-3.5 4.5-7 0-2.6-1.2-4.8-3-6.2.3 1.6-.2 3-1.4 3.9C16.8 8 16.3 4.8 12 3z" />
-                </svg>
+              <div className="w-12 h-12 bg-[#F6EFDF] rounded-full flex items-center justify-center group-hover:scale-105 transition-transform shadow-md shrink-0 relative overflow-hidden">
+                <Image
+                  src="/images/logokika.png"
+                  alt="Logo Kika Al-safar"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <span
                 className={`${marcellus.className} text-2xl md:text-3xl tracking-tight text-[#F6EFDF]`}
               >
-                Kika<span className="text-[#C6952F]">Al-Safar</span>
+                Kika <span className="text-[#C6952F]">Al-Safar</span>
               </span>
             </Link>
             <p className="text-[#E4D6B8]/70 text-sm leading-relaxed mb-8 max-w-md">
@@ -119,20 +138,25 @@ export default function Footer() {
               yang berdedikasi memberikan pelayanan amanah, profesional, dan
               terpercaya bagi setiap jemaah.
             </p>
+            
+            {/* Social Media Icons Rendering */}
             <div className="flex gap-3">
-              {["IG", "FB", "TK"].map((label) => (
+              {socialLinks.map((social) => (
                 <a
-                  key={label}
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-white/5 border border-[#C6952F]/30 flex items-center justify-center text-[#F6EFDF] hover:bg-[#C6952F] hover:text-[#1B120B] hover:-translate-y-1 transition-all"
+                  key={social.name}
+                  href={social.href}
+                  aria-label={social.name}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-11 h-11 rounded-full bg-white/5 border border-[#C6952F]/30 flex items-center justify-center text-[#F6EFDF] hover:bg-[#C6952F] hover:text-[#1B120B] hover:-translate-y-1 transition-all shadow-sm hover:shadow-[#C6952F]/30"
                 >
-                  <span className="text-xs font-bold">{label}</span>
+                  {social.icon}
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Kolom 2: Kontak — mini-grid kartu, echo motif manifest bar */}
+          {/* Kolom 2: Kontak */}
           <div className="lg:col-span-7 flex flex-col">
             <h4 className="text-[#C6952F] font-semibold tracking-[0.2em] text-xs uppercase mb-6">
               Hubungi Kami
