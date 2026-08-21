@@ -54,7 +54,8 @@ export default function TestimonialsSection() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/testimonials`);
+        // FIX 1: Nambahin /api/ di URL endpoint biar bisa nembak ke route backend Laravel yang bener
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/testimonials`);
         const result = await response.json();
 
         if (result.success && result.data) {
@@ -69,8 +70,8 @@ export default function TestimonialsSection() {
             return {
               id: item.id,
               name: item.name,
-              // Gunakan placeholder elegan kalau nggak ada foto
-              photo: item.image_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop",
+              // FIX 2: Ganti link gambar Unsplash yang mati 404 pakai link cadangan yang baru dan elegan
+              photo: item.image_url || "https://images.unsplash.com/photo-1591461942940-0eb52b571110?q=80&w=800&auto=format&fit=crop",
               package: item.package_name || "Layanan Kika Alsafar",
               comment: item.review,
               rating: item.rating,
@@ -205,6 +206,8 @@ export default function TestimonialsSection() {
                       src={item.photo}
                       alt={item.name}
                       fill
+                      // FIX 3: Tambahin properti sizes biar warning terminal Next.js ilang dan nambah performance gambar
+                      sizes="(max-width: 768px) 100vw, 400px" 
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1B120B]/50 via-transparent to-transparent" />
